@@ -47,3 +47,11 @@ async def devolver_cita_segun_id(id_cita:int) -> Cita:
             return cita
     raise HTTPException(status_code=404, detail="No se ha encontrado ninguna cita con el ID proporcionado")
 
+@app.put('/actualizar_cita/{id_cita_modificar}')
+async def actualizar_cita(id_cita_modificar:int, nueva_cita:Cita) -> Cita:
+    for i,cita in enumerate(lista_de_citas):
+        if cita.ID == id_cita_modificar:
+            lista_de_citas[i] = nueva_cita
+        return lista_de_citas[i]
+
+
