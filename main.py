@@ -13,14 +13,14 @@ Crea un endpoint para actualizar una cita existente.
 Crea un endpoint para eliminar una cita por su ID.
     """
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import List, Dict
 import uuid #para generar id automáticos
 
 app = FastAPI()
 
 class Cita(BaseModel):
-    ID: uuid.UUID = ...
+    ID: uuid.UUID = Field(default_factory=uuid.uuid4, alias="id")# Utilizamos `Field` con `default_factory` para que el ID se autogenere automáticamente.
     Fecha: str
     Titulo: str
     Descripcion: str
@@ -31,30 +31,28 @@ class ListaDeCitas(BaseModel):
 cita1 = Cita(ID=uuid.uuid4(), Fecha="2024", Titulo="Gandalf" ,Descripcion="Todo lo que debes es decidir que hacer con el tiempo que se te ha dado")
 lista_de_citas = []
 
-@app.post('/crear_cita') # crea nueva cita y la agrega a la lista
+@app.post('/crear_cita', response_model=Cita) # crea nueva cita y la agrega a la lista
 async def crear_cita(nueva_cita:Cita) -> Cita:
-    nueva_cita.ID = uuid.uuid4()
     lista_de_citas.append(nueva_cita)
-    print (lista_de_citas)
-
     return nueva_cita
 
-@app.get('/')
+@app.get('/', response_model= dict)
 async def observar_lista() -> dict:
     return {"lista": lista_de_citas}
 
-@app.get('/cita_por_id/{id_cita}')
+@app.get('/cita_por_id/{id_cita}', response_model=Cita)
 async def devolver_cita_segun_id(id_cita:uuid.UUID) -> Cita:
     for cita in lista_de_citas:
         if cita.ID == id_cita:
             return cita
     raise HTTPException(status_code=404, detail="No se ha encontrado ninguna cita con el ID proporcionado")
 
-@app.put('/actualizar_cita/{id_cita_modificar}')
+@app.put('/actualizar_cita/{id_cita_modificar}', response_model=Cita)
 async def actualizar_cita(id_cita_modificar:uuid.UUID, nueva_cita:Cita) -> Cita:
     for i,cita in enumerate(lista_de_citas):
         if cita.ID == id_cita_modificar:
             lista_de_citas[i] = nueva_cita
+            lista_de_citas[i].ID = id_cita_modificar
         return nueva_cita
     raise HTTPException(status_code=404, detail="No se encontró ninguna cita con el ID proporcionado")
     
