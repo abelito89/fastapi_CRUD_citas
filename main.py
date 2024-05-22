@@ -31,16 +31,6 @@ class Cita(BaseModel):
     Titulo: str
     Descripcion: str
 
-
-# Nuevo modelo para actualizar una cita, sin el campo ID
-'''class CitaUpdate(BaseModel):
-    Fecha: str
-    Titulo: str
-    Descripcion: str'''
-
-'''class ListaDeCitas(BaseModel):
-    lista: List[Cita]'''
-
 cita1 = Cita(ID=uuid.uuid4(), Fecha="2024", Titulo="Gandalf" ,Descripcion="Todo lo que debes es decidir que hacer con el tiempo que se te ha dado")
 lista_de_citas = []
 
@@ -77,6 +67,3 @@ async def eliminar_cita(id_cita_eliminar:uuid.UUID) -> Dict:
             del lista_de_citas[i]
             return {"mensaje":"Cita eliminada exitosamente"}
     raise HTTPException(status_code=404, detail="No se encontró ninguna cita con el ID proporcionado")
-
-
-
