@@ -1,5 +1,3 @@
-Claro, aquí tienes el README sin la sección de licencia:
-
 ```markdown
 # API para Gestionar una Agenda
 
