@@ -19,22 +19,36 @@ import uuid #para generar id automáticos
 
 app = FastAPI()
 
+class CitaSinId(BaseModel):
+    Fecha: str
+    Titulo: str
+    Descripcion: str
+
+
 class Cita(BaseModel):
     ID: uuid.UUID = Field(default_factory=uuid.uuid4, alias="id")# Utilizamos `Field` con `default_factory` para que el ID se autogenere automáticamente.
     Fecha: str
     Titulo: str
     Descripcion: str
 
-class ListaDeCitas(BaseModel):
-    lista: List[Cita]
+
+# Nuevo modelo para actualizar una cita, sin el campo ID
+'''class CitaUpdate(BaseModel):
+    Fecha: str
+    Titulo: str
+    Descripcion: str'''
+
+'''class ListaDeCitas(BaseModel):
+    lista: List[Cita]'''
 
 cita1 = Cita(ID=uuid.uuid4(), Fecha="2024", Titulo="Gandalf" ,Descripcion="Todo lo que debes es decidir que hacer con el tiempo que se te ha dado")
 lista_de_citas = []
 
 @app.post('/crear_cita', response_model=Cita) # crea nueva cita y la agrega a la lista
-async def crear_cita(nueva_cita:Cita) -> Cita:
-    lista_de_citas.append(nueva_cita)
-    return nueva_cita
+async def crear_cita(nueva_cita:CitaSinId) -> Cita:
+    cita_con_id = Cita(**nueva_cita.dict())
+    lista_de_citas.append(cita_con_id)
+    return cita_con_id
 
 @app.get('/', response_model= dict)
 async def observar_lista() -> dict:
@@ -48,12 +62,12 @@ async def devolver_cita_segun_id(id_cita:uuid.UUID) -> Cita:
     raise HTTPException(status_code=404, detail="No se ha encontrado ninguna cita con el ID proporcionado")
 
 @app.put('/actualizar_cita/{id_cita_modificar}', response_model=Cita)
-async def actualizar_cita(id_cita_modificar:uuid.UUID, nueva_cita:Cita) -> Cita:
+async def actualizar_cita(id_cita_modificar:uuid.UUID, nueva_cita:CitaSinId) -> Cita:
     for i,cita in enumerate(lista_de_citas):
         if cita.ID == id_cita_modificar:
-            lista_de_citas[i] = nueva_cita
-            lista_de_citas[i].ID = id_cita_modificar
-        return nueva_cita
+            cita_modificada = Cita(id = id_cita_modificar, **nueva_cita.dict())
+            lista_de_citas[i] = cita_modificada          
+            return cita_modificada
     raise HTTPException(status_code=404, detail="No se encontró ninguna cita con el ID proporcionado")
     
 @app.delete('/eliminar_cita/{id_cita_eliminar}')
