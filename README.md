@@ -1,4 +1,4 @@
-```markdown
+
 # API para Gestionar una Agenda
 
 Esta API permite gestionar una agenda, incluyendo la creación, recuperación, actualización y eliminación de citas. La API está construida con FastAPI y utiliza Pydantic para la validación de datos.
