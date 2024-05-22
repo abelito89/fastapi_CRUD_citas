@@ -31,7 +31,6 @@ class Cita(BaseModel):
     Titulo: str
     Descripcion: str
 
-cita1 = Cita(ID=uuid.uuid4(), Fecha="2024", Titulo="Gandalf" ,Descripcion="Todo lo que debes es decidir que hacer con el tiempo que se te ha dado")
 lista_de_citas = []
 
 @app.post('/crear_cita', response_model=Cita) # crea nueva cita y la agrega a la lista
