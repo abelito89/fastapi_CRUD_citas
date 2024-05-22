@@ -15,18 +15,18 @@ Esta API permite gestionar una agenda, incluyendo la creación, recuperación, a
 2. Crea y activa un ambiente virtual.
 3. Instala las dependencias utilizando el archivo `requirements.txt`.
 
-```sh
-# Clonar el repositorio
-git clone <URL_DEL_REPOSITORIO>
+    ```sh
+    # Clonar el repositorio
+    git clone <URL_DEL_REPOSITORIO>
 
-# Crear y activar el ambiente virtual
-python -m venv venv
-venv\Scripts\activate  # En Windows
-source venv/bin/activate  # En macOS/Linux
+    # Crear y activar el ambiente virtual
+    python -m venv venv
+    venv\Scripts\activate  # En Windows
+    source venv/bin/activate  # En macOS/Linux
 
-# Instalar dependencias
-pip install -r requirements.txt
-```
+    # Instalar dependencias
+    pip install -r requirements.txt
+    ```
 
 ## Ejecución de la API
 
